@@ -7,13 +7,13 @@ configuration {
 }
 
 * {
-    font: @font@;
-    background: @base00@;
-    background-alt: @base01@;
-    foreground: @base05@;
-    selected: @base07@;
-    active: @base0A@;
-    urgent: @base0E@;
+    font: "@font@";
+    background: @background@;
+    background-alt: @backgroundAlt@;
+    foreground: @foreground@;
+    selected: @selected@;
+    active: @active@;
+    urgent: @urgent@;
 }
 
 
