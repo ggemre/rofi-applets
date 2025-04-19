@@ -9,7 +9,7 @@ let
     selected = if cfg != null then cfg.colors.selected else "#89b4fa";
     active = if cfg != null then cfg.colors.active else "#a6e3a1";
     urgent = if cfg != null then cfg.colors.urgent else "#f38ba8";
-    font       = if cfg != null then cfg.font else "JetBrainsMono Nerd Font 12";
+    font       = if cfg != null then ''${cfg.font}'' else ''"JetBrainsMono Nerd Font 12"'';
   };
 
   powermenuScript = pkgs.substituteAll {
