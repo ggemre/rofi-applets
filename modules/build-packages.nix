@@ -1,71 +1,62 @@
 { pkgs, cfg ? null }:
 
 let
-  launcherTheme = pkgs.substituteAll {
-    src = ../pkgs/themes/launcher.rasi;
-    background = if cfg != null then cfg.colors.background else "#1e1e2e";
-    backgroundAlt = if cfg != null then cfg.colors.backgroundAlt else "#181825";
-    foreground = if cfg != null then cfg.colors.foreground else "#cdd6f4";
-    selected = if cfg != null then cfg.colors.selected else "#89b4fa";
-    active = if cfg != null then cfg.colors.active else "#a6e3a1";
-    urgent = if cfg != null then cfg.colors.urgent else "#f38ba8";
-    font = if cfg != null then cfg.font else "JetBrainsMono Nerd Font 12";
+  defaultColors = {
+    background    = "#1e1e2e";
+    backgroundAlt = "#181825";
+    foreground    = "#cdd6f4";
+    selected      = "#89b4fa";
+    active        = "#a6e3a1";
+    urgent        = "#f38ba8";
   };
 
-  launcherScript = pkgs.substituteAll {
-    src = ../pkgs/launcher.sh;
-    theme = launcherTheme;
+  getValue = name: if cfg != null && cfg.colors ? ${name} then cfg.colors.${name} else defaultColors.${name};
+  font = if cfg != null then cfg.font else "JetBrainsMono Nerd Font 12";
+
+  rofiPkg = if cfg != null && cfg ? rofiPackage then cfg.rofiPackage else pkgs.rofi-wayland;
+
+  mkTheme = themeFile: pkgs.substituteAll {
+    src = themeFile;
+    background    = getValue "background";
+    backgroundAlt = getValue "backgroundAlt";
+    foreground    = getValue "foreground";
+    selected      = getValue "selected";
+    active        = getValue "active";
+    urgent        = getValue "urgent";
+    inherit font;
   };
 
-  powerTheme = pkgs.substituteAll {
-    src = ../pkgs/themes/powermenu.rasi;
-    background = if cfg != null then cfg.colors.background else "#1e1e2e";
-    backgroundAlt = if cfg != null then cfg.colors.backgroundAlt else "#181825";
-    foreground = if cfg != null then cfg.colors.foreground else "#cdd6f4";
-    selected = if cfg != null then cfg.colors.selected else "#89b4fa";
-    active = if cfg != null then cfg.colors.active else "#a6e3a1";
-    urgent = if cfg != null then cfg.colors.urgent else "#f38ba8";
-    font = if cfg != null then cfg.font else "JetBrainsMono Nerd Font 12";
-  };
+  mkApplet = name: {
+    themePath,
+    scriptPath,
+    extraInputs ? []
+  }: let
+    theme = mkTheme themePath;
+    script = pkgs.substituteAll {
+      src = scriptPath;
+      inherit theme;
+    };
+  in
+    pkgs.writeShellApplication {
+      name = "rofi-${name}";
+      runtimeInputs = [ rofiPkg ] ++ extraInputs;
+      text = builtins.readFile script;
+    };
 
-  powerScript = pkgs.substituteAll {
-    src = ../pkgs/powermenu.sh;
-    theme = powerTheme;
-  };
-
-  networkTheme = pkgs.substituteAll {
-    src = ../pkgs/themes/networkmanager.rasi;
-    background = if cfg != null then cfg.colors.background else "#1e1e2e";
-    backgroundAlt = if cfg != null then cfg.colors.backgroundAlt else "#181825";
-    foreground = if cfg != null then cfg.colors.foreground else "#cdd6f4";
-    selected = if cfg != null then cfg.colors.selected else "#89b4fa";
-    active = if cfg != null then cfg.colors.active else "#a6e3a1";
-    urgent = if cfg != null then cfg.colors.urgent else "#f38ba8";
-    font = if cfg != null then cfg.font else "JetBrainsMono Nerd Font 12";
-  };
-
-  networkScript = pkgs.substituteAll {
-    src = ../pkgs/networkmanager.sh;
-    theme = networkTheme;
-  };
 in {
-  # TODO: check all runtimeInputs
-  launcher = pkgs.writeShellApplication {
-    name = "rofi-launcher";
-    runtimeInputs = with pkgs; [ rofi-wayland ];
-    text = builtins.readFile launcherScript;
+  launcher = mkApplet "launcher" {
+    themePath = ../pkgs/themes/launcher.rasi;
+    scriptPath = ../pkgs/launcher.sh;
   };
 
-  powermenu = pkgs.writeShellApplication {
-    name = "rofi-powermenu";
-    runtimeInputs = with pkgs; [ rofi-wayland ];
-    text = builtins.readFile powerScript;
+  powermenu = mkApplet "powermenu" {
+    themePath = ../pkgs/themes/powermenu.rasi;
+    scriptPath = ../pkgs/powermenu.sh;
   };
 
-  networkmanager = pkgs.writeShellApplication {
-    name = "rofi-networkmanager";
-    runtimeInputs = with pkgs; [ rofi-wayland libnotify ];
-    text = builtins.readFile networkScript;
+  networkmanager = mkApplet "networkmanager" {
+    themePath = ../pkgs/themes/networkmanager.rasi;
+    scriptPath = ../pkgs/networkmanager.sh;
+    extraInputs = [ pkgs.libnotify ];
   };
 }
-
