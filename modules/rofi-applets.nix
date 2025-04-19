@@ -1,6 +1,9 @@
-{ config, lib, pkgs, ... }:
-
-let
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
   cfg = config.programs.rofi-applets;
 in {
   options.programs.rofi-applets = {
@@ -11,7 +14,7 @@ in {
       default = pkgs.rofi-wayland;
       description = "Which Rofi package to use (e.g., rofi or rofi-wayland).";
     };
-    
+
     font = lib.mkOption {
       type = lib.types.str;
       default = "JetBrainsMono Nerd Font 12";
@@ -52,10 +55,9 @@ in {
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkMerge [
-      (lib.mkIf cfg.launcher.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).launcher])
-      (lib.mkIf cfg.powermenu.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).powermenu ])
-      (lib.mkIf cfg.networkmanager.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).networkmanager ])
+      (lib.mkIf cfg.launcher.enable [(import ../modules/build-packages.nix {inherit pkgs cfg;}).launcher])
+      (lib.mkIf cfg.powermenu.enable [(import ../modules/build-packages.nix {inherit pkgs cfg;}).powermenu])
+      (lib.mkIf cfg.networkmanager.enable [(import ../modules/build-packages.nix {inherit pkgs cfg;}).networkmanager])
     ];
   };
 }
-

@@ -7,14 +7,17 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, ... }: {
+  outputs = {
+    nixpkgs,
+    home-manager,
+    ...
+  }: {
     homeManagerModules.rofi-applets = import ./modules/rofi-applets.nix;
 
-    packages = nixpkgs.lib.genAttrs [ "x86_64-linux" "aarch64-linux" ] (system:
-      let
-        pkgs = import nixpkgs { inherit system; };
-      in {
-        inherit (import ./modules/build-packages.nix { inherit pkgs; }) launcher powermenu networkmanager;
-      });
+    packages = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"] (system: let
+      pkgs = import nixpkgs {inherit system;};
+    in {
+      inherit (import ./modules/build-packages.nix {inherit pkgs;}) launcher powermenu networkmanager;
+    });
   };
 }
