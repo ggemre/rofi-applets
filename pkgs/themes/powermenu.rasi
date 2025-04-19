@@ -97,7 +97,7 @@ element {
     padding:                     40px 10px;
     border:                      0px solid;
     border-radius:               0px;
-    background-color:            @bg-alt;
+    background-color:            @background-alt;
     text-color:                  @foreground;
     cursor:                      pointer;
 }

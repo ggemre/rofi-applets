@@ -11,7 +11,7 @@ options=(
 rofi_cmd() {
   rofi -dmenu \
     -p "Goodbye ${USER}" \
-    -mesg "Uptime: $(uptime -p | sed -e 's/up //g')" \
+    -mesg "Uptime:$(uptime | tr "," " " | cut -f6-8 -d" ")" \
     -no-click-to-exit \
     -theme @theme@
 }
