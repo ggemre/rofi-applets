@@ -9,8 +9,8 @@ in {
   options.programs.rofi-applets = {
     enable = lib.mkEnableOption "Rofi Applets";
 
-    rofiPackage = mkOption {
-      type = types.package;
+    rofiPackage = lib.mkOption {
+      type = lib.types.package;
       default = pkgs.rofi-wayland;
       description = "Which Rofi package to use (e.g., rofi or rofi-wayland).";
     };
