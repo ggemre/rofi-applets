@@ -40,13 +40,13 @@ in {
     };
 
     powermenu.enable = lib.mkEnableOption "Power Menu applet";
-    # networkmanager.enable = lib.mkEnableOption "Network Manager applet";
+    networkmanager.enable = lib.mkEnableOption "Network Manager applet";
   };
 
   config = lib.mkIf cfg.enable {
     home.packages = lib.mkMerge [
       (lib.mkIf cfg.powermenu.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).powermenu ])
-      # (lib.mkIf cfg.networkmanager.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).networkmanager ])
+      (lib.mkIf cfg.networkmanager.enable [ (import ../modules/build-packages.nix { inherit pkgs cfg; }).networkmanager ])
     ];
   };
 }
