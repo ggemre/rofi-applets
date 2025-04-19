@@ -30,7 +30,7 @@ let
 
   networkScript = pkgs.substituteAll {
     src = ../pkgs/networkmanager.sh;
-    theme = powerTheme;
+    theme = networkTheme;
   };
 in {
   # TODO: check all runtimeInputs
