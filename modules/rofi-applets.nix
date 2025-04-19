@@ -18,7 +18,7 @@ in {
         default = "#1e1e2e";
       };
       backgroundAlt = lib.mkOption {
-        type = lib.stypes.str;
+        type = lib.types.str;
         default = "#181825";
       };
       foreground = lib.mkOption {
