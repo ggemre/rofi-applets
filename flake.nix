@@ -14,7 +14,7 @@
       let
         pkgs = import nixpkgs { inherit system; };
       in {
-        inherit (import ./modules/build-packages.nix { inherit pkgs; }) powermenu networkmanager;
+        inherit (import ./modules/build-packages.nix { inherit pkgs; }) launcher powermenu networkmanager;
       });
   };
 }
