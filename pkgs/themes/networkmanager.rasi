@@ -5,7 +5,7 @@ configuration {
 }
 
 * {
-    font: @font@;
+    font: "@font@";
     background: @background@;
     background-alt: @backgroundAlt@;
     foreground: @foreground@;
