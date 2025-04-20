@@ -1,13 +1,10 @@
 #!/bin/bash
 
-# Dependencies: network-manager, rofi, notify-send
+# Dependencies: network-manager, rofi, libnotify
 
 # Function to get the list of available WiFi networks
 get_wifi_list() {
   first_line=true
-
-  # Show notification while fetching the Wi-Fi list
-  notify-send "WiFi" "Fetching available Wi-Fi networks..."
 
   # Get detailed WiFi network information
   nmcli --field SSID,BSSID,SECURITY,BARS,SIGNAL,BANDWIDTH,MODE,CHAN,RATE device wifi list |
@@ -112,20 +109,17 @@ while true; do
         notify-send "Network" "Failed to disable networking."
         continue
       fi
-      notify-send "Network" "All networks disabled."
     else
       if ! nmcli networking on; then
         notify-send "Network" "Failed to enable networking."
         continue
       fi
-      notify-send "Network" "All networks enabled."
     fi
     break
   fi
 
   # Handle reload option
   if [[ "$chosen_network" == "$reload_option" ]]; then
-    notify-send "WiFi" "Reloading networks..."
     if ! nmcli device wifi rescan; then
       notify-send "WiFi" "Failed to rescan networks."
       continue
@@ -157,9 +151,7 @@ while true; do
     fi
 
     # Try to connect to the hidden network
-    notify-send "WiFi" "Attempting to connect to hidden network $hidden_ssid..."
     if nmcli device wifi connect "$hidden_ssid" password "$password" hidden yes; then
-      notify-send "WiFi" "Successfully connected to hidden network $hidden_ssid"
       break # Exit to end the script after successful connection
     else
       notify-send "WiFi" "Failed to connect to hidden network $hidden_ssid"
@@ -192,7 +184,6 @@ while true; do
 
       # Forget the selected saved network
       nmcli connection delete "$network_name"
-      notify-send "WiFi" "Network '$network_name' forgotten successfully."
       break # Break out of the inner loop to return to main menu
     done
     continue # Return to main menu
@@ -200,7 +191,6 @@ while true; do
 
   # Handle regular network connection
   ssid=$(echo "$chosen_network" | awk '{print $2}')
-  notify-send "WiFi" "Attempting to connect to $ssid..."
 
   # Check if the network is already known
   if nmcli connection show | grep -q "^$ssid "; then
@@ -220,7 +210,6 @@ while true; do
 
         # Try to connect to the network with the password
         if nmcli device wifi connect "$ssid" password "$password"; then
-          notify-send "WiFi" "Successfully connected to $ssid"
           break 2 # Exit both loops on success
         else
           notify-send "WiFi" "Failed to connect to $ssid. Incorrect password or other error."
@@ -231,7 +220,6 @@ while true; do
     else
       # Connect to an open network
       if nmcli device wifi connect "$ssid"; then
-        notify-send "WiFi" "Successfully connected to $ssid"
         break
       else
         notify-send "WiFi" "Failed to connect to $ssid"
