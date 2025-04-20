@@ -12,7 +12,7 @@
     home-manager,
     ...
   }: {
-    homeManagerModules.rofi-applets = import ./modules/rofi-applets.nix;
+    homeManagerModules.default = import ./modules/rofi-applets.nix;
 
     packages = nixpkgs.lib.genAttrs ["x86_64-linux" "aarch64-linux"] (system: let
       pkgs = import nixpkgs {inherit system;};
