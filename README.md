@@ -22,6 +22,10 @@ that utilize rofi to do small tasks such as launching apps, power management, co
 
 *insert overview, config options, and screenshots*
 
+### Calculator
+
+*🛠️ coming soon...*
+
 ### Bluetooth Menu
 
 *🛠️ coming soon...*
