@@ -93,7 +93,7 @@ Options to configure rofi-applets are shown in the example below:
   config,
   ...
 }: {
-  imports = [inputs.rofi-applets.homeManagerModules.rofi-applets];
+  imports = [inputs.rofi-applets.homeManagerModules.default];
 
   programs.rofi-applets = {
     enable = true;
